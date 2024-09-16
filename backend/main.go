@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
-	"log"
 
 	"github.com/joho/godotenv"
 
@@ -14,9 +14,9 @@ import (
 )
 
 type JSONResponse struct {
-	Message string `json:"message"`
-	Data    any    `json:"data”`
-	Code    int    `json:"data"`
+	Message  string `json:"message"`
+	Response any    `json:"response"`
+	Code     int    `json:"code"`
 }
 
 func loadEnvVar(v string) string {
@@ -67,12 +67,13 @@ func generateHandler(w http.ResponseWriter, r *http.Request, key string) http.Ha
 		}
         model := client.GenerativeModel("gemini-1.5-flash")
 
-		resp, err := model.GenerateContent(
-			ctx,
-			genai.Text(r.FormValue("q")))
+		resp, err := model.GenerateContent(ctx, genai.Text(r.FormValue("q")))
 		
-		data := JSONResponse{Message: "Successful", Data: resp, Code: 0}
-		sendJSONResponse(w, http.StatusOK, data)
+		data := JSONResponse{Message: "Successful", Res: data, Code: 0}
+		err = sendJSONResponse(w, http.StatusOK, data)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
