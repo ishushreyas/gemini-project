@@ -20,20 +20,20 @@ type JSONResponse struct {
 }
 
 func loadEnvVar(v string) string {
-    // Load env only in development (optional)
-    if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
-        err := godotenv.Load()
-        if err != nil {
-            panic("env not found in development")
-        }
-    }
-    
-    envVar := os.Getenv(v)
-    if envVar == "" {
-        log.Fatalf("%s not found in environment variables", v)
-    }
-    
-    return envVar
+	// Load env only in development (optional)
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+		err := godotenv.Load()
+		if err != nil {
+			panic("env not found in development")
+		}
+	}
+
+	envVar := os.Getenv(v)
+	if envVar == "" {
+		log.Fatalf("%s not found in environment variables", v)
+	}
+
+	return envVar
 }
 
 // Middleware to add security headers like CSP
@@ -47,7 +47,7 @@ func addSecurityHeaders(next http.Handler) http.Handler {
 	})
 }
 
-//Return JSON Response
+// Return JSON Response
 func sendJSONResponse(w http.ResponseWriter, s int, d JSONResponse) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(s)
@@ -57,19 +57,19 @@ func sendJSONResponse(w http.ResponseWriter, s int, d JSONResponse) error {
 	return nil
 }
 
-//Getting Gemini Response
+// Getting Gemini Response
 func generateHandler(w http.ResponseWriter, r *http.Request, key string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.Background()
-        client, err := genai.NewClient(ctx, option.WithAPIKey(key))
+		client, err := genai.NewClient(ctx, option.WithAPIKey(key))
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-        model := client.GenerativeModel("gemini-1.5-flash")
+		model := client.GenerativeModel("gemini-1.5-flash")
 
 		resp, err := model.GenerateContent(ctx, genai.Text(r.FormValue("q")))
-		
-		data := JSONResponse{Message: "Successful", Res: data, Code: 0}
+
+		data := JSONResponse{Message: "Successful", Response: resp, Code: 0}
 		err = sendJSONResponse(w, http.StatusOK, data)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
