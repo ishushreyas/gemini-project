@@ -18,6 +18,9 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
+        <form method='POST' action='/api/generate'>
+          <input name='q' />
+        </form>
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
