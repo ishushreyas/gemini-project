@@ -2,6 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  text-align: left;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -55,12 +56,12 @@ input:focus,
 input:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-pre, code {
+pre {
   background: #000;
   color: #fff;
   border-radius: 12px;
   padding: 12px;
-  text-align: left;
+
 }
 
 @media (prefers-color-scheme: light) {
