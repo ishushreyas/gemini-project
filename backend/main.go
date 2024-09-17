@@ -13,10 +13,52 @@ import (
 	"google.golang.org/api/option"
 )
 
+// JSONResponse defines the structure of your API response
 type JSONResponse struct {
-	Message  string `json:"message"`
-	Response any    `json:"response"`
-	Code     int    `json:"code"`
+	Message string         `json:"message"`
+	Response genai.Response `json:"response"`
+	Code    int            `json:"code"`
+}
+
+// RequestBody defines the expected structure of the incoming JSON request body
+type RequestBody struct {
+	Q string `json:"q"`
+}
+
+func generateHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	client, err := genai.NewClient(ctx, option.WithAPIKey(loadEnvVar("API_KEY")))
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	model := client.GenerativeModel("gemini-1.5-flash")
+
+	// Parse the JSON request body
+	var requestBody RequestBody
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		http.Error(w, "Error parsing JSON request body", http.StatusBadRequest)
+		return
+	}
+
+	// Generate content using the value of 'q'
+	resp, err := model.GenerateContent(ctx, genai.Text(requestBody.Q))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data := JSONResponse{Message: "Successful", Response: resp, Code: 0}
+	if err := sendJSONResponse(w, http.StatusOK, data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+// sendJSONResponse writes the JSON response to the http.ResponseWriter
+func sendJSONResponse(w http.ResponseWriter, statusCode int, data interface{}) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	return json.NewEncoder(w).Encode(data)
 }
 
 func loadEnvVar(v string) string {
@@ -52,42 +94,6 @@ func addSecurityHeaders(next http.Handler) http.Handler {
 		// Call the next handler
 		next.ServeHTTP(w, r)
 	})
-}
-
-// Return JSON Response
-func sendJSONResponse(w http.ResponseWriter, s int, d JSONResponse) error {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(s)
-	if err := json.NewEncoder(w).Encode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Getting Gemini Response
-func generateHandler(w http.ResponseWriter, r *http.Request) {
-		ctx := context.Background()
-		client, err := genai.NewClient(ctx, option.WithAPIKey(loadEnvVar("API_KEY")))
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		model := client.GenerativeModel("gemini-1.5-flash")
-
-	        if err := r.ParseForm(); err != nil {
-		        http.Error(w, "Error parsing form", http.StatusBadRequest)
-	        	return
-	        }
-
-		resp, err := model.GenerateContent(ctx, genai.Text(r.FormValue("q")))
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-
-		data := JSONResponse{Message: "Successful", Response: resp, Code: 0}
-		err = sendJSONResponse(w, http.StatusOK, data)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
 }
 
 func main() {
