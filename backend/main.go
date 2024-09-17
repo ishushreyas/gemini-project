@@ -24,14 +24,14 @@ func loadEnvVar(v string) string {
 	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
 		err := godotenv.Load()
 		if err != nil {
-			panic("env not found in development")
+			log.Println("env not found in RAILWAY development")
 		}
 	}
 
 	if os.Getenv("RENDER_SERVICE_ID") == "" { // (Render sets RENDER_SERVICE_ID in production)
                 err := godotenv.Load()
                 if err != nil {
-                     panic("env not found in development")
+                        log.Println("env not found in RENDER development")
                 }
         }
 
