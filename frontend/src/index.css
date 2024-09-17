@@ -55,6 +55,13 @@ input:focus,
 input:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+pre, code {
+  background: #000;
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: left;
+}
 
 @media (prefers-color-scheme: light) {
   :root {
