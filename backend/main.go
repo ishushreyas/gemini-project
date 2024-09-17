@@ -16,7 +16,7 @@ import (
 // JSONResponse defines the structure of your API response
 type JSONResponse struct {
 	Message string         `json:"message"`
-	Response genai.Response `json:"response"`
+	Response any           `json:"response"`
 	Code    int            `json:"code"`
 }
 
