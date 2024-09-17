@@ -74,6 +74,12 @@ func generateHandler(w http.ResponseWriter, r *http.Request, key string) http.Ha
 		}
 		model := client.GenerativeModel("gemini-1.5-flash")
 
+		err := r.ParseForm()
+	        if err != nil {
+		        http.Error(w, "Error parsing form", http.StatusBadRequest)
+	        	return
+	        }
+
 		resp, err := model.GenerateContent(ctx, genai.Text(r.FormValue("q")))
 
 		data := JSONResponse{Message: "Successful", Response: resp, Code: 0}
