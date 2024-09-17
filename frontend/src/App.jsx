@@ -4,23 +4,11 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-  });
+  const [message, setMessage] = useState('');
 
   // State to handle form submission status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
-
-  // Handle form input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -33,7 +21,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(message),
       });
 
       if (!response.ok) {
@@ -73,8 +61,7 @@ function App() {
             type="text"
             id="name"
             name="q"
-            value={formData.name}
-            onChange={handleChange}
+            onChange={setMessage(e.target.value)}
             required
           />
         </div>
