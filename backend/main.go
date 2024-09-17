@@ -28,6 +28,13 @@ func loadEnvVar(v string) string {
 		}
 	}
 
+	if os.Getenv("RENDER_SERVICE_ID") == "" { // (Render sets RENDER_SERVICE_ID in production)
+                err := godotenv.Load()
+                if err != nil {
+                     panic("env not found in development")
+                }
+        }
+
 	envVar := os.Getenv(v)
 	if envVar == "" {
 		log.Fatalf("%s not found in environment variables", v)
