@@ -4,7 +4,52 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+  });
+
+  // State to handle form submission status
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [responseMessage, setResponseMessage] = useState('');
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      setResponseMessage('Form submitted successfully!');
+      console.log('Form response:', result.response.Candidates[0].Parts);
+    } catch (error) {
+      setResponseMessage('There was an error submitting the form.');
+      console.error('Form submission error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -18,15 +63,37 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <form method='POST' action='/api/generate'>
-          <input name='q' />
-        </form>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <div>
+      <h2>Submit Your Information</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      </form>
+      {responseMessage && <p>{responseMessage}</p>}
+    </div>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
