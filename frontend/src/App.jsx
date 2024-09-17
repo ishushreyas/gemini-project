@@ -20,32 +20,33 @@ function App() {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+  try {
+    const response = await fetch('/api/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ q: formData.q }), // Ensure you are sending the data as JSON
+    });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const result = await response.json();
-      setResponseMessage(result.response.Candidates[0].Content.Parts[0]);
-      console.log('Form response:', result.response.Candidates[0].Parts);
-    } catch (error) {
-      setResponseMessage('There was an error submitting the form.');
-      console.error('Form submission error:', error);
-    } finally {
-      setIsSubmitting(false);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-  };
+
+    const result = await response.json();
+    const partsMessage = result.response.Candidates[0].Content.Parts[0];
+    setResponseMessage(partsMessage);
+    console.log('Form response:', partsMessage);
+  } catch (error) {
+    setResponseMessage('There was an error submitting the form.');
+    console.error('Form submission error:', error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <>
