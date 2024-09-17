@@ -78,9 +78,11 @@ function App() {
             {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </form>
+        <div class="res">
         {responseMessage && (
             <ReactMarkdown>{responseMessage}</ReactMarkdown>
           )}
+        </div>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
