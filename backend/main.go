@@ -74,8 +74,7 @@ func generateHandler(w http.ResponseWriter, r *http.Request, key string) http.Ha
 		}
 		model := client.GenerativeModel("gemini-1.5-flash")
 
-		err := r.ParseForm()
-	        if err != nil {
+	        if err := r.ParseForm(); err != nil {
 		        http.Error(w, "Error parsing form", http.StatusBadRequest)
 	        	return
 	        }
