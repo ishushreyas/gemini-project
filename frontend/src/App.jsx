@@ -25,7 +25,7 @@ function App() {
   setIsSubmitting(true);
 
   try {
-    const response = await fetch('/api/submit', {
+    const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,10 +61,10 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <h2>Submit Your Information</h2>
+        <h2>Gemini</h2>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="name">Name:</label>
+            <label htmlFor="name">Message:</label>
             <input
               type="text"
               id="name"
