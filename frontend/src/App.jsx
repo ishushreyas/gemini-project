@@ -37,7 +37,7 @@ function App() {
       }
 
       const result = await response.json();
-      setResponseMessage(result.response.Candidates[0].Parts);
+      setResponseMessage(result.response.Candidates[0].Content.Parts[0]);
       console.log('Form response:', result.response.Candidates[0].Parts);
     } catch (error) {
       setResponseMessage('There was an error submitting the form.');
