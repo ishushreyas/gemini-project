@@ -65,10 +65,9 @@ func sendJSONResponse(w http.ResponseWriter, s int, d JSONResponse) error {
 }
 
 // Getting Gemini Response
-func generateHandler(key string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func generateHandler(w http.ResponseWriter, r *http.Request) {
 		ctx := context.Background()
-		client, err := genai.NewClient(ctx, option.WithAPIKey(key))
+		client, err := genai.NewClient(ctx, option.WithAPIKey(loadEnvVar("API_KEY")))
 		if err != nil {
 			log.Fatal(err.Error())
 		}
@@ -89,7 +88,6 @@ func generateHandler(key string) http.HandlerFunc {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-	}
 }
 
 func main() {
@@ -102,7 +100,7 @@ func main() {
 		w.Write([]byte("API response"))
 	})
 
-	http.HandleFunc("/api/generate", func(w http.ResponseWriter, r *http.Request) { generateHandler(loadEnvVar("API_KEY")) })
+	http.HandleFunc("/api/generate", generateHandler)
 
 	// Start the server
 	http.ListenAndServe(":8080", nil)
