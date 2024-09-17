@@ -41,7 +41,7 @@ function App() {
       }
 
       const result = await response.json();
-      setResponseMessage('Form submitted successfully!');
+      setResponseMessage(result.response.Candidates[0].Parts);
       console.log('Form response:', result.response.Candidates[0].Parts);
     } catch (error) {
       setResponseMessage('There was an error submitting the form.');
@@ -63,6 +63,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
+        <p>{responseMessage}</p>
         <div>
       <h2>Submit Your Information</h2>
       <form onSubmit={handleSubmit}>
@@ -71,19 +72,8 @@ function App() {
           <input
             type="text"
             id="name"
-            name="name"
+            name="q"
             value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
             onChange={handleChange}
             required
           />
