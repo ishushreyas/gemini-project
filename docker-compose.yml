@@ -5,10 +5,12 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
-  backend:
+      - api
+    volumes:
+      - frontend/build:/app/frontend/build
+  api:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -19,4 +21,4 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - api
