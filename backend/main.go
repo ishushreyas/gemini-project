@@ -15,9 +15,9 @@ import (
 
 // JSONResponse defines the structure of your API response
 type JSONResponse struct {
-	Message string         `json:"message"`
-	Response any           `json:"response"`
-	Code    int            `json:"code"`
+	Message  string `json:"message"`
+	Response any    `json:"response"`
+	Code     int    `json:"code"`
 }
 
 // RequestBody defines the expected structure of the incoming JSON request body
