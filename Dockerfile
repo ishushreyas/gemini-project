@@ -12,6 +12,7 @@ WORKDIR /app/backend
 COPY ./backend/go.mod ./backend/go.sum ./
 RUN go mod download
 COPY ./backend ./
+# Copy the 'dist' folder from the frontend build
 COPY --from=build-frontend /app/frontend/dist ./frontend/dist
 RUN go build -o server .
 
