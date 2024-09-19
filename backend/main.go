@@ -98,8 +98,8 @@ func addSecurityHeaders(next http.Handler) http.Handler {
 
 func main() {
 	// Serve static React files from ./frontend/build
-	//fs := http.FileServer(http.Dir("./"))
-	//http.Handle("/", addSecurityHeaders(fs))
+	fs := http.FileServer(http.Dir("./"))
+	http.Handle("/", addSecurityHeaders(fs))
 
 	// Handle API routes here
 	http.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
