@@ -8,7 +8,8 @@ function App() {
   // State to handle form input and submission status
   const [formData, setFormData] = useState({ q: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [responseMessage, setResponseMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
   // Handle input changes
   const handleChange = (e) => {
@@ -24,8 +25,11 @@ function App() {
   e.preventDefault();
   setIsSubmitting(true);
 
-  try {
-    const response = await fetch('/api/generate', {
+    if (newMessage.trim() !== '') {
+      setMessages([...messages, { role: 'user', content: newMessage }]);
+      setNewMessage('');
+      try {
+          const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,27 +43,28 @@ function App() {
 
     const result = await response.json();
     const partsMessage = result.response.Candidates[0].Content.Parts[0];
-    setResponseMessage(partsMessage);
+    setMessage([...messages, { role: 'bot', content: partsMessage }]);
     console.log('Form response:', partsMessage);
   } catch (error) {
     setResponseMessage('There was an error submitting the form.');
     console.error('Form submission error:', error);
   } finally {
     setIsSubmitting(false);
-  }
+      }
+      //   .then(response => response.json())
+      //   .then(data => setMessages([...messages, { role: 'bot', content: data.response }]));
+    }
 };
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+        {messages.map((message, index) => (
+          <li key={index}>
+            <strong>{message.role}:</strong> {message.content}
+          </li>
+        ))}
+      </ul>
       <div className="card">
         <h2>Gemini</h2>
         <form onSubmit={handleSubmit}>
