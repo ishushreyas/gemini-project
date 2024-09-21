@@ -42,11 +42,10 @@ function App() {
 
         const result = await response.json();
         const partsMessage = result.response.Candidates[0].Content.Parts[0];
-        setMessages([...messages, { role: 'bot', content: partsMessage }]);
-        setResponseMessage(''); // Clear response message on success
+        setMessages((prev) => ([...prev, { role: 'bot', content: partsMessage }]));
         console.log('Form response:', partsMessage);
       } catch (error) {
-        setResponseMessage('There was an error submitting the form.');
+        setMessage((prev) => ([...prev, { role: 'bot', content: 'There was an error submitting the form.'}]));
         console.error('Form submission error:', error);
       } finally {
         setIsSubmitting(false);
@@ -77,7 +76,7 @@ function App() {
               required></textarea>
           </div>
           <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? 'Generating...' : 'Generate'}
           </button>
         </form>
       </div>
