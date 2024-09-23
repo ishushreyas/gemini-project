@@ -35,7 +35,7 @@ h1 {
   line-height: 1.1;
 }
 
-button, input {
+button, textarea {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -51,8 +51,8 @@ button:hover {
 }
 button:focus,
 button:focus-visible,
-input:focus,
-input:focus-visible {
+textarea:focus,
+textarea:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 pre {
@@ -60,7 +60,7 @@ pre {
   color: #fff;
   border-radius: 12px;
   padding: 12px;
-
+  max-width: 90%;
 }
 .res * {
   text-align: left;
@@ -74,7 +74,7 @@ pre {
   a:hover {
     color: #747bff;
   }
-  button, input {
+  button, textarea {
     background-color: #f9f9f9;
   }
 }
