@@ -96,6 +96,10 @@ func addSecurityHeaders(next http.Handler) http.Handler {
 	})
 }
 
+func enableCors(w *http.ResponseWriter) {
+(*w).Header().Set("Access-Control-Allow-Origin", "https://open-the.vercel.app")
+}
+
 func main() {
 	// Serve static React files from ./frontend/dist
 	fs := http.FileServer(http.Dir("./frontend/dist"))
@@ -103,6 +107,7 @@ func main() {
 
 	// Handle API routes here
 	http.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
+  enableCors(&w)
 		w.Write([]byte("API response"))
 	})
 
