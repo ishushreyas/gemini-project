@@ -56,7 +56,7 @@ const App = () => {
           Gemini Chat
         </h1>
 
-        <div className="space-y-6 mb-8 max-h-[60vh] overflow-y-auto">
+        <div className="space-y-6 pb-8 max-h-[60vh] overflow-y-auto">
           {messages.map((message, index) => (
             <div
               key={index}
