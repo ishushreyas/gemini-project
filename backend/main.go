@@ -32,7 +32,7 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err.Error())
 	}
 
-	model := client.GenerativeModel("gemini-1.5-flash")
+	model := client.GenerativeModel("gemini-2.0-flash")
 
 	// Parse the JSON request body
 	var requestBody RequestBody
